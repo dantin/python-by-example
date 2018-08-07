@@ -4,7 +4,7 @@ import numpy as np
 
 from numpy import pi
 
-from basics import print_dtype
+from example import print_dtype
 
 
 if __name__ == '__main__':
