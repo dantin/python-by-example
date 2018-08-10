@@ -1,0 +1,3 @@
+
+msg = 'hi'
+print(msg)
