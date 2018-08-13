@@ -1,10 +1,12 @@
 
 favorite_numbers = {
-    'david': 43,
-    'jiayi': 17,
-    'zhiyuan': 7,
-    'zhenhua': 3,
+    'david': [43, 2],
+    'jiayi': [17],
+    'zhiyuan': [5, 7, 11],
+    'zhenhua': [3],
 }
 
-for k, v in favorite_numbers.items():
-    print(k + ' likes ' + str(favorite_numbers[k]) + '.')
+for name, numbers in favorite_numbers.items():
+    print('\n' + name.title() + ' likes:')
+    for num in numbers:
+        print('\t' + str(num))
