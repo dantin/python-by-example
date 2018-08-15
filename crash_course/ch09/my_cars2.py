@@ -1,4 +1,4 @@
-import car
+import car_all as car
 
 
 my_beetle = car.Car('volkswagen', 'beetle', 2016)
