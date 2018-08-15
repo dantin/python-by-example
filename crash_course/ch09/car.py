@@ -1,3 +1,4 @@
+"""A class that can be used to represent a car."""
 
 class Car():
     """A simple attempt to represent a car."""
@@ -33,17 +34,41 @@ class Car():
         self.odometer_reading += miles
 
 
-my_new_car = Car('audi', 'a4', 2016)
-print(my_new_car.get_descriptive_name())
+class Battery():
+    """A simple attempt to model a battery for an electric car."""
 
-# Modifying an attribute's value directly.
-my_new_car.odometer_reading = 23
-my_new_car.read_odometer()
+    def __init__(self, battery_size=70):
+        """Initialize the battery's attributes."""
+        self.battery_size = battery_size
 
-# Modifying an attribute's value through a method.
-my_new_car.update_odometer(23500)
-my_new_car.read_odometer()
+    def describe_battery(self):
+        """Print a statement describing the battery size."""
+        print('This car has a ' + str(self.battery_size) + '-kWh battery.')
 
-# Incrementing an attribute's value through a method.
-my_new_car.increment_odometer(100)
-my_new_car.read_odometer()
+    def get_range(self):
+        """Print a statement about the range this battery provides."""
+        if self.battery_size == 70:
+            range = 240
+        elif self.battery_size == 85:
+            range = 270
+
+        message = 'This car can go approximately ' + str(range)
+        message += ' miles on a full charge.'
+        print(message)
+
+
+class ElectricCar(Car):
+    """Represent aspect of a car, specific to electric vehicles."""
+
+    def __init__(self, make, model, year):
+        """
+        Initialize attributes of the parent class.
+        Then initialize attributes specific to an electric car.
+        """
+        super().__init__(make, model, year)
+        self.battery = Battery()
+
+    def fill_gas_tank(self):
+        """Electric cars don't have gas tanks."""
+        # overriding method from the parent class.
+        print('This car doesn\'t need a gas tank!')
