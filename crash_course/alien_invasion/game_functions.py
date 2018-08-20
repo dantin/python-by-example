@@ -95,7 +95,7 @@ def create_alien(ai_settings, screen, aliens, alien_number, row_number):
     aliens.add(alien)
 
 
-def create_fleet(ai_settings, screen, ship,  aliens):
+def create_fleet(ai_settings, screen, ship, aliens):
     """Create a full fleet of aliens."""
     # Create an alien and find the number of aliens in a row.
     alien = Alien(ai_settings, screen)
@@ -108,3 +108,8 @@ def create_fleet(ai_settings, screen, ship,  aliens):
         for alien_number in range(number_aliens_x):
             create_alien(ai_settings, screen, aliens, alien_number,
                          row_number)
+
+
+def update_aliens(aliens):
+    """Update the positions of all aliens in the fleet."""
+    aliens.update()
