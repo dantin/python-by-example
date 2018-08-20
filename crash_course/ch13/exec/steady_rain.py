@@ -138,9 +138,18 @@ def check_raindrops_edges(raindrops):
             raindrops.remove(raindrop)
 
 
-def update_raindrops(raindrops):
+def update_raindrops(settings, screen, raindrops):
     """Update the position of all raindrops."""
+    orig_len = len(raindrops)
     check_raindrops_edges(raindrops)
+    curr_len = len(raindrops)
+    if curr_len < orig_len:
+        raindrop = Raindrop(settings, screen)
+        number_raindrops_x = get_number_raindrops_x(settings, raindrop.rect.width)
+        # Create group of raindrops.
+        for raindrop_number in range(number_raindrops_x):
+            create_raindrop(settings, screen, raindrops, raindrop_number, 0)
+
     raindrops.update()
 
 
@@ -161,7 +170,7 @@ def run():
     # Main loop
     while True:
         check_events(settings, screen)
-        update_raindrops(raindrops)
+        update_raindrops(settings, screen, raindrops)
         update_screen(settings, screen, raindrops)
 
 
