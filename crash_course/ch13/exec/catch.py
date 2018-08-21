@@ -76,13 +76,13 @@ class Ball(Sprite):
         super().__init__()
         self.settings = settings
         self.screen = screen
+        self.screen_rect = screen.get_rect()
 
         # Load the ball image and set its attribute.
         self.image = pygame.image.load('images/ball.bmp')
         self.rect = self.image.get_rect()
 
-        screen_rect = screen.get_rect()
-        self.rect.x = randint(0, screen_rect.width - self.rect.width)
+        self.rect.x = randint(0, self.screen_rect.width - self.rect.width)
         self.rect.y = 0
 
         self.y = float(self.rect.y)
@@ -90,6 +90,11 @@ class Ball(Sprite):
     def blitme(self):
         """Draw the ball at its current location."""
         self.screen.blit(self.image, self.rect)
+
+    def check_edges(self):
+        """Return True if ball is at the edge of screen."""
+        if self.rect.bottom >= self.screen_rect.bottom:
+            return True
 
     def update(self):
         """Move the ball down."""
@@ -128,7 +133,7 @@ def check_event(settings, screen, catchers):
             check_keyup_events(event, catcher)
 
 
-def update_screen(settings, screen, catchers, balls):
+def update_screen(settings, screen, balls, catchers):
     """Update images on the screen and flip to the new screen."""
     # Redraw the screen during each pass through the loop.
     screen.fill(settings.bg_color)
@@ -156,10 +161,26 @@ def update_catcher(catchers):
     catchers.update()
 
 
-def update_ball(balls):
+def update_ball(settings, screen, balls, catchers):
     """Update positions of balls."""
     # Update ball positions.
     balls.update()
+
+    # Get rid of balls that have disappeared.
+    for ball in balls.copy():
+        if ball.check_edges():
+            balls.remove(ball)
+            create_ball(settings, screen, balls)
+
+    check_ball_catcher_collisions(settings, screen, balls, catchers)
+
+
+def check_ball_catcher_collisions(settings, screen, balls, catchers):
+    """Respond to ball-catcher collisions."""
+    collisions = pygame.sprite.groupcollide(balls, catchers, True, False)
+
+    if len(balls) == 0:
+        create_ball(settings, screen, balls)
 
 
 def run():
@@ -182,8 +203,8 @@ def run():
     while True:
         check_event(settings, screen, catchers)
         update_catcher(catchers)
-        update_ball(balls)
-        update_screen(settings, screen, catchers, balls)
+        update_ball(settings, screen, balls, catchers)
+        update_screen(settings, screen, balls, catchers)
 
 
 run()
