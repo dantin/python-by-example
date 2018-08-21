@@ -120,10 +120,9 @@ def check_keyup_events(event, catcher):
         catcher.moving_left = False
 
 
-def check_event(settings, screen, catchers):
+def check_event(settings, screen, catcher):
     """Respond to key presses and mouse event."""
     # Get the only catcher.
-    catcher = catchers.sprites()[0]
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -133,21 +132,14 @@ def check_event(settings, screen, catchers):
             check_keyup_events(event, catcher)
 
 
-def update_screen(settings, screen, balls, catchers):
+def update_screen(settings, screen, balls, catcher):
     """Update images on the screen and flip to the new screen."""
     # Redraw the screen during each pass through the loop.
     screen.fill(settings.bg_color)
-    for catcher in catchers.sprites():
-        catcher.draw_catcher()
+    catcher.draw_catcher()
     balls.draw(screen)
     # Make the most recently drawn screen visible.
     pygame.display.flip()
-
-
-def create_catcher(settings, screen, catchers):
-    """Create a cathcer."""
-    catcher = Catcher(settings, screen)
-    catchers.add(catcher)
 
 
 def create_ball(settings, screen, balls):
@@ -156,12 +148,12 @@ def create_ball(settings, screen, balls):
     balls.add(ball)
 
 
-def update_catcher(catchers):
+def update_catcher(catcher):
     """Update positions of catcher."""
-    catchers.update()
+    catcher.update()
 
 
-def update_ball(settings, screen, balls, catchers):
+def update_ball(settings, screen, balls, catcher):
     """Update positions of balls."""
     # Update ball positions.
     balls.update()
@@ -172,14 +164,13 @@ def update_ball(settings, screen, balls, catchers):
             balls.remove(ball)
             create_ball(settings, screen, balls)
 
-    check_ball_catcher_collisions(settings, screen, balls, catchers)
+    check_ball_catcher_collisions(settings, screen, balls, catcher)
 
 
-def check_ball_catcher_collisions(settings, screen, balls, catchers):
+def check_ball_catcher_collisions(settings, screen, balls, catcher):
     """Respond to ball-catcher collisions."""
-    collisions = pygame.sprite.groupcollide(balls, catchers, True, False)
-
-    if len(balls) == 0:
+    if pygame.sprite.spritecollideany(catcher, balls):
+        balls.empty()
         create_ball(settings, screen, balls)
 
 
@@ -191,20 +182,19 @@ def run():
         (settings.screen_width, settings.screen_height))
     pygame.display.set_caption("Catcher")
 
-    # Make a group of catcher and a group of balls.
-    catchers = Group()
+    # Make a catcher and a group of balls.
+    catcher = Catcher(settings, screen)
     balls = Group()
 
     # Create ball and catcher.
     create_ball(settings, screen, balls)
-    create_catcher(settings, screen, catchers)
 
     # Start the main loop for game.
     while True:
-        check_event(settings, screen, catchers)
-        update_catcher(catchers)
-        update_ball(settings, screen, balls, catchers)
-        update_screen(settings, screen, balls, catchers)
+        check_event(settings, screen, catcher)
+        update_catcher(catcher)
+        update_ball(settings, screen, balls, catcher)
+        update_screen(settings, screen, balls, catcher)
 
 
 run()
