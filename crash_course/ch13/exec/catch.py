@@ -26,12 +26,11 @@ class Settings():
         self.ball_drop_speed = 3
 
 
-class Catcher(Sprite):
+class Catcher():
     """Catcher class."""
 
     def __init__(self, settings, screen):
         """Initialize the catcher and set its starting position."""
-        super().__init__()
         self.settings = settings
         self.screen = screen
         self.screen_rect = screen.get_rect()
